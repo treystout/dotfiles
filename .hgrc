@@ -1,0 +1,21 @@
+[ui]
+username = Trey Stout <treystout@gmail.com>
+verbose = True
+merge = kdiff3
+
+[merge-tools]
+kdiff3.executable = /Applications/kdiff3.app/Contents/MacOS/kdiff3
+kdiff3.args = $base $local $other -o $output
+
+[extensions]
+churn=
+color=
+graphlog=
+progress=
+extended_filters=~/code/dotfiles/hg_extensions/extended_filters.py
+breakdown=~/code/dotfiles/hg_extensions/breakdown.py
+
+[alias]
+slog = log --style ~/code/dev-dot-files/trey/hg_templates/slog
+nlog = log --style ~/code/dev-dot-files/trey/hg_templates/nlog
+sglog = glog --style ~/code/dev-dot-files/trey/hg_templates/sglog
