@@ -10,6 +10,8 @@ alias grep='grep --colour=auto'
 alias s='git status'
 alias d='git diff'
 alias tree='tree -AC'
+alias vi=vim
+alias iv=vim
 alias f='grep -rI --include=*.py --include=*.ini --include=*.yaml --include=*.sh --include=*.conf --include=*.wsgi --include=*.js --include=*.j2'
 
 NORMAL='\[\033[0m\]'
@@ -49,17 +51,29 @@ ps1_set() {
       ps1="$ps1 [${PURPLE}${branch}${NORMAL}]"
     fi
   fi
-  if [ -d .hg/store ]; then
-    local branch=$(hg branch 2> /dev/null)
-    if [ $branch != "default" ]; then
-      ps1="$ps1 [${PURPLE}${branch}${NORMAL}]"
-    fi
-  fi  
   ps1="$ps1 ${GREEN}$prompt_char${NORMAL} " # prompt
   export PS1=$ps1
 }
 
+if [ -f ~/.agent.env ] ; then
+  . ~/.agent.env > /dev/null
+if ! kill -0 $SSH_AGENT_PID > /dev/null 2>&1; then
+  echo "Stale agent file found. Starting new agent"
+  eval `ssh-agent | tee ~/.agent.env`
+  ssh-add
+fi
+else
+  echo "starting ssh-agent"
+  eval `ssh-agent | tee ~/.agent.env`
+fi
+
 export TERM=xterm-256color
 export EDITOR=vim
-export PATH=/opt/chef/bin:/usr/local/git/bin:$PATH
 export PROMPT_COMMAND=ps1_set
+export GOPATH=$HOME/go
+export GOROOT=/usr/local/src/go
+export GOAPPENGINEPATH=/usr/local/src/go_appengine
+export PATH=/usr/local/git/bin::$GOPATH/bin:$GOROOT/bin:$GOAPPENGINEPATH:$PATH
+# don't offer to tab-complete python local packages
+export FIGNORE=egg-info
+

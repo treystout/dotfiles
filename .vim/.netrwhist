@@ -1,6 +1,2 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =4
-let g:netrw_dirhist_1='/Users/trey/code/countr/ext'
-let g:netrw_dirhist_2='/Users/trey/code/countr/ext/src'
-let g:netrw_dirhist_3='/Users/trey/code/countr/ext/src/bg'
-let g:netrw_dirhist_4='/Users/trey/code/countr/ext/src/inject'
+let g:netrw_dirhist_cnt =0
