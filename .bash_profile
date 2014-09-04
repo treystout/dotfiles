@@ -1,6 +1,6 @@
-alias l='ls -aF'
-alias ll='ls -alF'
-alias lll='ls -alF | less'
+alias l='ls --color=auto -aF'
+alias ll='ls --color=auto -alF'
+alias lll='ls --color=auto -alF | less'
 alias cp='cp -i'
 alias rm='rm -i'
 alias cls='clear'
@@ -13,6 +13,11 @@ alias tree='tree -AC'
 alias vi=vim
 alias iv=vim
 alias f='grep -rI --include=*.py --include=*.ini --include=*.yaml --include=*.sh --include=*.conf --include=*.wsgi --include=*.js --include=*.j2'
+
+# setup solarized dircolors (make sure you symlink ~/.dircolors to the one from dotfiles
+if [ -x /usr/bin/dircolors ]; then
+  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+fi  
 
 NORMAL='\[\033[0m\]'
 BLUE='\[\033[00;34m\]'
