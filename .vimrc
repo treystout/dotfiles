@@ -4,6 +4,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'kien/ctrlp.vim'
+Plugin 'Valloric/YouCompleteMe'
 call vundle#end()
 filetype plugin indent on
 
@@ -20,8 +21,6 @@ set expandtab
 " Line Numbers
 set number
 set numberwidth=4
-
-filetype plugin indent on
 
 syntax enable
 set ruler
@@ -105,3 +104,10 @@ autocmd BufReadPost *
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
      \   exe "normal! g`\"" |
      \ endif
+
+" Control-O (open files via CtrlP plugin)
+let g:ctrlp_map = '<c-o>'
+let g:ctrlp_custom_ignore = {
+  \ 'dir': '\v[\/]\.(git|hg)$',
+  \ 'file': '\v\.(exe|so|dll|pyc|pyo)$',
+  \ }
