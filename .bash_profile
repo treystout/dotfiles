@@ -45,18 +45,18 @@ git_info() {
   # we're inside a git repo, check the status and branch name
   # then show the branch name in different colors depending on
   # our local status
-  local on_branch="^# On branch ([^${IFS}]*)"
+  local on_branch="On branch ([^${IFS}]*)"
   local on_commit="HEAD detached at ([^${IFS}]*)"
-  local unstaged="no changes added to commit"
+  local unstaged="Changes not staged"
   local ahead="Your branch is ahead"
-  local nothing="nothing to commit"
-  local git_status="$(git status -u no 2> /dev/null)"
+  local nothing="nothing added to commit"
+  local git_status="$(git status -u 2>/dev/null)"
   local out=""
 
   if [[ $git_status =~ $unstaged ]]; then
     out+="$YELLOW"
   elif [[ $git_status =~ $ahead ]]; then
-    out+="$RED"
+    out+="$RED AHEAD"
   elif [[ $git_status =~ $nothing ]]; then
     out+="$GREEN"
   else
