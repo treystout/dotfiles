@@ -12,52 +12,93 @@ alias d='git diff'
 alias tree='tree -AC'
 alias vi=vim
 alias iv=vim
+alias bp='vim ~/.bash_profile'
+alias ..='source ~/.bash_profile'
 alias f='grep -rI --include=*.py --include=*.ini --include=*.yaml --include=*.sh --include=*.conf --include=*.wsgi --include=*.js --include=*.j2 --exclude-dir=bootstrap* --exclude-dir=thirdparty --exclude-dir=site-packages'
 
 # setup solarized dircolors (make sure you symlink ~/.dircolors to the one from dotfiles
 if [ -x /usr/bin/dircolors ]; then
   test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi  
+UNDL="\\[$(tput sgr 0 1)\\]"
+BOLD="\\[$(tput bold)\\]"
+NORMAL="\\[$(tput sgr0)\\]"
 
-NORMAL='\[\033[0m\]'
-BLUE='\[\033[00;34m\]'
-GREY='\[\033[02;37m\]'
-YELLOW='\[\033[0;33m\]'
-PURPLE='\[\033[0;35m\]'
-GREEN='\[\033[00;32m\]'
-RED_BOLD='\[\033[01;31m\]'
-SYM_RADIOACTIVE='\u2622'
-SYM_BRANCH='\u2387'
+BGRED="\\[$(tput setab 1)\\]"
+BGGREEN="\\[$(tput setab 2)\\]"
+BGBLUE="\\[$(tput setab 4)\\]"
+BGWHITE="\\[$(tput setab 7)\\]"
+
+BLACK="\\[$(tput setaf 0)\\]"
+RED="\\[$(tput setaf 1)\\]"
+GREEN="\\[$(tput setaf 2)\\]"
+YELLOW="\\[$(tput setaf 3)\\]"
+BLUE="\\[$(tput setaf 4)\\]"
+PURPLE="\\[$(tput setaf 5)\\]"
+CYAN="\\[$(tput setaf 6)\\]"
+WHITE="\\[$(tput setaf 7)\\]"
+
+SYM_RADIOACTIVE=""
+SYM_BRANCH="λ"
+
+git_info() {
+  # we're inside a git repo, check the status and branch name
+  # then show the branch name in different colors depending on
+  # our local status
+  local on_branch="^# On branch ([^${IFS}]*)"
+  local on_commit="HEAD detached at ([^${IFS}]*)"
+  local unstaged="no changes added to commit"
+  local ahead="Your branch is ahead"
+  local nothing="nothing to commit"
+  local git_status="$(git status -u no 2> /dev/null)"
+  local out=""
+
+  if [[ $git_status =~ $unstaged ]]; then
+    out+="$YELLOW"
+  elif [[ $git_status =~ $ahead ]]; then
+    out+="$RED"
+  elif [[ $git_status =~ $nothing ]]; then
+    out+="$GREEN"
+  else
+    out+="$NORMAL"
+  fi
+
+  if [[ $git_status =~ $on_branch ]]; then
+    out+="$SYM_BRANCH ${BASH_REMATCH[1]}"
+  elif [[ $git_status =~ $on_commit ]]; then
+    out+="${BASH_REMATCH[1]}"
+  fi
+  echo -e $out;
+}
 
 ps1_set() {
   local ps1=""
-  local prompt_char='⎆'
+  local prompt_char="▼"
   local user_color=$BLUE
 
   if [[ $UID -eq 0 ]] ; then
     prompt_char='#'
-    user_color=$RED_BOLD
+    user_color=$RED
   fi
 
-  ps1="$ps1\! " # history counter
-  ps1="$ps1${GREY}\t " # time of day
-  ps1="$ps1${user_color}\u" # username
-  ps1="$ps1${NORMAL}@" # separator
-  ps1="$ps1${YELLOW}\h " # hostname
-  ps1="$ps1${NORMAL}[${BLUE}\w${NORMAL}]" # working directory
-  ps1="$ps1 J:${PURPLE}\j${NORMAL}" # job count
+  ps1+="$NORMAL\!" # history counter
+  ps1+=" $WHITE\t" # time of day
+  #ps1+=" $user_color\u" # username
+  #ps1+="${NORMAL}@" # separator
+  #ps1+="${YELLOW}\h" # hostname
+  ps1+="$NORMAL [$BLUE\w$NORMAL]" # working directory
+  ps1+=" J:$PURPLE\j" # job count
   if [ -n "$VIRTUAL_ENV" ]; then
-    ps1="$ps1 (${GREEN}$(basename $VIRTUAL_ENV)${NORMAL})"
+    ps1+=" $GREEN$(basename $VIRTUAL_ENV)$NORMAL "
+  else
+    ps1+=" $BGRED$WHITE"
+    ps1+="!$NORMAL "
   fi
   if [ -d .git ]; then
-    local branch=$(git branch --color=never 2> /dev/null | grep '^*' | colrm 1 2)
-    #echo "branch is >$branch<"
-    if [[ $branch != "master" ]]; then
-      ps1="$ps1 [${PURPLE}${branch}${NORMAL}]"
-    fi
+    ps1+="$(git_info)$NORMAL"
   fi
-  ps1="$ps1 ${GREEN}$prompt_char${NORMAL} " # prompt
-  export PS1=$ps1
+  ps1+=" $YELLOW$prompt_char$NORMAL " # prompt
+  PS1=$ps1
 }
 
 #if [ -f ~/.agent.env ] ; then
@@ -75,10 +116,10 @@ ps1_set() {
 export TERM=xterm-256color
 export EDITOR=vim
 export PROMPT_COMMAND=ps1_set
-export GOPATH=$HOME/go
-export GOROOT=/usr/local/src/go
-export GOAPPENGINEPATH=/usr/local/src/go_appengine
-export PATH=/usr/local/git/bin::$GOPATH/bin:$GOROOT/bin:$GOAPPENGINEPATH:$PATH
+export PATH=$PATH:/usr/local/git/bin
 # don't offer to tab-complete python local packages
 export FIGNORE=egg-info
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
 
