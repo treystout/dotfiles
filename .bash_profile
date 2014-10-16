@@ -50,13 +50,13 @@ git_info() {
   local unstaged="Changes not staged"
   local ahead="Your branch is ahead"
   local nothing="nothing added to commit"
-  local git_status="$(git status -u 2>/dev/null)"
+  local git_status="$(git status -u no 2>/dev/null)"
   local out=""
 
   if [[ $git_status =~ $unstaged ]]; then
     out+="$YELLOW"
   elif [[ $git_status =~ $ahead ]]; then
-    out+="$RED AHEAD"
+    out+="$RED"
   elif [[ $git_status =~ $nothing ]]; then
     out+="$GREEN"
   else
