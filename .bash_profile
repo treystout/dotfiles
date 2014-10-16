@@ -50,7 +50,7 @@ ps1_set() {
     ps1="$ps1 (${GREEN}$(basename $VIRTUAL_ENV)${NORMAL})"
   fi
   if [ -d .git ]; then
-    local branch=$(git branch --no-column --no-color 2> /dev/null | grep '^*' | colrm 1 2)
+    local branch=$(git branch --color=never 2> /dev/null | grep '^*' | colrm 1 2)
     #echo "branch is >$branch<"
     if [[ $branch != "master" ]]; then
       ps1="$ps1 [${PURPLE}${branch}${NORMAL}]"
@@ -60,17 +60,17 @@ ps1_set() {
   export PS1=$ps1
 }
 
-if [ -f ~/.agent.env ] ; then
-  . ~/.agent.env > /dev/null
-if ! kill -0 $SSH_AGENT_PID > /dev/null 2>&1; then
-  echo "Stale agent file found. Starting new agent"
-  eval `ssh-agent | tee ~/.agent.env`
-  ssh-add
-fi
-else
-  echo "starting ssh-agent"
-  eval `ssh-agent | tee ~/.agent.env`
-fi
+#if [ -f ~/.agent.env ] ; then
+#  . ~/.agent.env > /dev/null
+#if ! kill -0 $SSH_AGENT_PID > /dev/null 2>&1; then
+#  echo "Stale agent file found. Starting new agent"
+#  eval `ssh-agent | tee ~/.agent.env`
+#  ssh-add
+#fi
+#else
+#  echo "starting ssh-agent"
+#  eval `ssh-agent | tee ~/.agent.env`
+#fi
 
 export TERM=xterm-256color
 export EDITOR=vim
