@@ -12,7 +12,7 @@ alias d='git diff'
 alias tree='tree -AC'
 alias vi=vim
 alias iv=vim
-alias f='grep -rI --include=*.py --include=*.ini --include=*.yaml --include=*.sh --include=*.conf --include=*.wsgi --include=*.js --include=*.j2'
+alias f='grep -rI --include=*.py --include=*.ini --include=*.yaml --include=*.sh --include=*.conf --include=*.wsgi --include=*.js --include=*.j2 --exclude-dir=bootstrap* --exclude-dir=thirdparty --exclude-dir=site-packages'
 
 # setup solarized dircolors (make sure you symlink ~/.dircolors to the one from dotfiles
 if [ -x /usr/bin/dircolors ]; then
