@@ -4,3 +4,7 @@
   name="Trey Stout"
 [color]
 	ui = true
+[alias]
+  co = checkout
+  br = branch
+  st = status
