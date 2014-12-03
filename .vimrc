@@ -5,6 +5,8 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'mustache/vim-mustache-handlebars'
+Plugin 'zah/nimrod.vim'
 call vundle#end()
 filetype plugin indent on
 
@@ -111,3 +113,24 @@ let g:ctrlp_custom_ignore = {
   \ 'dir': '\v[\/]\.(git|hg)$',
   \ 'file': '\v\.(exe|so|dll|pyc|pyo)$',
   \ }
+
+" Nimrod stuff
+fun! JumpToDef()
+  if exists("*GotoDefinition_" . &filetype)
+    call GotoDefinition_{&filetype}()
+  else
+    exe "norm! \<C-]>"
+  endif
+endf
+
+" Jump to tag
+nn <M-g> :call JumpToDef()<cr>
+ino <M-g> <esc>:call JumpToDef()<cr>i
+
+" Initials turn into a timestamped comment (Thanks to Mark Tozzi)
+if !exists("TimeStamp")
+  fun TimeStamp()
+    return "-- TS (" .  strftime("%d %b %Y %X") . ")"
+  endfun
+endif
+iab TS <C-R>=TimeStamp()<cr>
