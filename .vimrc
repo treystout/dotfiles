@@ -82,17 +82,20 @@ hi User2 term=bold cterm=bold ctermfg=gray ctermbg=darkred
 hi User3 term=bold cterm=NONE ctermfg=darkgray ctermbg=darkblue
 hi User4 term=bold cterm=NONE ctermfg=lightgray ctermbg=blue
 
-" Python Stuff
+let python_version_2=1
 let python_highlight_all=1
-highlight BadWhitespace ctermbg=red guibg=red
-" Display tabs at the beginning of a line in Python mode as bad.
-au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /^\t\+/
-" " Make trailing whitespace be flagged as bad.
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+
+highlight BadWhitespace ctermbg=124 guibg=124
+
+" Display tabs as BAD
+" Make trailing whitespace be flagged as bad in python and go
+au BufRead,BufNewFile *.py,*.go match BadWhitespace /\s\+$\|\t\+/
 " uglify chars past the 80 col limit
-au BufWinEnter *.py,*.pyw let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+au BufWinEnter *.py let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+au BufWinEnter *.go let w:m2=matchadd('ErrorMsg', '\%>110v.\+', -1)
 au BufRead,BufNewFile *.j2 set filetype=htmljinja
 au BufRead,BufNewFile *.less set filetype=less
+au FileType python set shiftwidth=2
 
 
 "Tell vim to remember certain things when we exit
