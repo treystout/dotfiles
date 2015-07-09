@@ -8,3 +8,13 @@
   co = checkout
   br = branch
   st = status
+[filter "media"]
+	required = true
+	clean = git media clean %f
+	smudge = git media smudge %f
+[push]
+	default = simple
+[github]
+	user = treystout
+[ghi]
+	token = !security find-internet-password -a treystout -s github.com -l 'ghi token' -w
