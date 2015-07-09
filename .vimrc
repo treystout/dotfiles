@@ -7,6 +7,8 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'zah/nimrod.vim'
+Plugin 'fatih/vim-go'
+Plugin 'ekalinin/Dockerfile.vim'
 call vundle#end()
 filetype plugin indent on
 
