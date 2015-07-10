@@ -85,11 +85,11 @@ hi User4 term=bold cterm=NONE ctermfg=lightgray ctermbg=blue
 let python_version_2=1
 let python_highlight_all=1
 
-highlight BadWhitespace ctermbg=124 guibg=124
+highlight TrailingWhitespace ctermbg=124 guibg=#af0000
 
 " Display tabs as BAD
 " Make trailing whitespace be flagged as bad in python and go
-au BufRead,BufNewFile *.py,*.go match BadWhitespace /\s\+$\|\t\+/
+au BufRead,BufNewFile *.py,*.go match TrailingWhitespace /\s\+$/
 " uglify chars past the 80 col limit
 au BufWinEnter *.py let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 au BufWinEnter *.go let w:m2=matchadd('ErrorMsg', '\%>110v.\+', -1)
