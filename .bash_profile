@@ -10,10 +10,10 @@ alias grep='grep --colour=auto'
 alias s='git status'
 alias d='git diff'
 alias tree='tree -AC'
-alias bp='mvim -v ~/.bash_profile'
-alias vi='mvim -v'
-alias vim='mvim -v'
-alias iv='mvim -v'
+alias bp='nvim ~/.bash_profile'
+alias vi='nvim'
+alias vim='nvim'
+alias iv='nvim'
 alias ..='source ~/.bash_profile'
 alias f='grep -rI --include=*.py --include=*.ini --include=*.yaml --include=*.sh --include=*.conf --include=*.wsgi --include=*.js --include=*.j2 --exclude-dir=bootstrap* --exclude-dir=thirdparty --exclude-dir=site-packages --exclude-dir=node_modules'
 alias dc='docker-compose'
@@ -23,28 +23,27 @@ alias ngrok_up='/Applications/ngrok http -subdomain=trey 5000'
 if [ -x /usr/bin/dircolors ]; then
   test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi  
-UNDL="\\[$(tput sgr 0 1)\\]"
-BOLD="\\[$(tput bold)\\]"
-printf -v NORMAL "\x1B[0m"
-printf -v RED "\x1B[31m"
+UNDL="\\001$(tput sgr 0 1)\\002"
+BOLD="\\001$(tput bold)\\002"
+NORMAL="\\001$(tput sgr0)\\002"
 
-BGRED="\\[$(tput setab 1)\\]"
-BGGREEN="\\[$(tput setab 2)\\]"
-BGBLUE="\\[$(tput setab 4)\\]"
-BGWHITE="\\[$(tput setab 7)\\]"
+BGRED="\\001$(tput setab 1)\\002"
+BGGREEN="\\001$(tput setab 2)\\002"
+BGBLUE="\\001$(tput setab 4)\\002"
+BGWHITE="\\001$(tput setab 7)\\002"
 
-BLACK="\\[$(tput setaf 0)\\]"
-RED="\\[$(tput setaf 1)\\]"
-GREEN="\\[$(tput setaf 2)\\]"
-YELLOW="\\[$(tput setaf 3)\\]"
-BLUE="\\[$(tput setaf 4)\\]"
-PURPLE="\\[$(tput setaf 5)\\]"
-CYAN="\\[$(tput setaf 6)\\]"
-WHITE="\\[$(tput setaf 7)\\]"
+BLACK="\\001$(tput setaf 0)\\002"
+RED="\\001$(tput setaf 1)\\002"
+GREEN="\\001$(tput setaf 2)\\002"
+YELLOW="\\001$(tput setaf 3)\\002"
+BLUE="\\001$(tput setaf 4)\\002"
+PURPLE="\\001$(tput setaf 5)\\002"
+CYAN="\\001$(tput setaf 6)\\002"
+WHITE="\\001$(tput setaf 7)\\002"
 
 SYM_RADIOACTIVE=""
 #SYM_BRANCH="λ"
-SYM_BRANCH="⏚"
+SYM_BRANCH="⎇"
 
 
 git_info() {
@@ -77,15 +76,24 @@ git_info() {
   echo -e $out;
 }
 
+job_count() {
+  local jcount=$(jobs | wc -l)
+  if [[ $jcount == "0" ]]; then
+    echo ""
+  else
+    echo "$WHITE🜉 ${PURPLE}$jcount"
+  fi
+}
+
 ps1_set() {
   local ps1=""
-  #local prompt_char="▼"
-  local prompt_char="➤"
+  local prompt_char="⌁"
 
   ps1+="$NORMAL\!" # history counter
   ps1+=" $WHITE\t" # time of day
-  ps1+=" $NORMAL[$BLUE\w$NORMAL]" # working directory
-  ps1+=" J:$PURPLE\j" # job count
+  ps1+=" $NORMAL$BLUE\u$GREEN\h"
+  ps1+=" $NORMAL⁅$WHITE\w$NORMAL⁆" # working directory
+  ps1+=" $(job_count)" # job count
   #if [ -n "$VIRTUAL_ENV" ]; then
   #  ps1+=" $GREEN$(basename $VIRTUAL_ENV)$NORMAL "
   #else
@@ -95,23 +103,23 @@ ps1_set() {
   if [ -d .git ]; then
     ps1+=" $(git_info)$NORMAL"
   fi
-  ps1+=" \$(exit_code) $WHITE$prompt_char$NORMAL " # prompt
+  ps1+=" \$(exit_code) $GREEN$prompt_char$NORMAL " # prompt
   export PS1=$ps1
 }
 
 exit_code() {
   local exitCode=$?
   if ((exitCode)); then
-    echo -en "\033[31mERR \033[m";
+    echo -en "${RED}🕱${NORMAL}"
   else
-    echo -en "\033[32mOK  \033[m";
+    echo -en "${GREEN}🗸${NORMAL}"
   fi
 }
 
 # tell /bin/ls to color output
 export CLICOLOR=1
 export TERM=xterm-256color
-export EDITOR="mvim -v"
+export EDITOR="nvim"
 export PROMPT_COMMAND=ps1_set
 # don't offer to tab-complete python local packages
 export FIGNORE=egg-info
@@ -120,6 +128,4 @@ export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 
 export GOPATH=$HOME/go
-export PATH=/usr/local/bin:/usr/local/git/bin:$PATH:$GOPATH/bin
-
-eval $(docker-machine env default)
+export PATH=/bin:/sbin:/usr/local/bin:/usr/local/git/bin:$PATH:$GOPATH/bin
